@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Binder — GCSE Revision Tracker</title>
+<title>The Binder — GCSE Revision Tracker & Set 1 Plus Prep</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
@@ -50,8 +50,37 @@
   button{ font-family: var(--sans); cursor:pointer; }
   select{ font-family: var(--sans); }
 
-  .wrap{ max-width:1180px; margin:0 auto; padding: 48px 32px 100px; position:relative; z-index:1; }
-  @media (max-width:760px){ .wrap{ padding: 32px 18px 80px; } }
+  .wrap{ max-width:1180px; margin:0 auto; padding: 32px 32px 100px; position:relative; z-index:1; }
+  @media (max-width:760px){ .wrap{ padding: 24px 18px 80px; } }
+
+  /* ---------- Navigation Bar ---------- */
+  .main-nav{
+    display: flex;
+    gap: 12px;
+    margin-bottom: 32px;
+    border-bottom: 2px solid var(--rule);
+    padding-bottom: 12px;
+  }
+  .nav-tab{
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    background: transparent;
+    border: 1.5px solid transparent;
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    transition: all 0.15s ease;
+  }
+  .nav-tab:hover{
+    color: var(--ink);
+    background: rgba(34,41,58,0.05);
+  }
+  .nav-tab.active{
+    color: var(--paper);
+    background: var(--ink);
+    border-color: var(--ink);
+  }
 
   /* ---------- Shared bits ---------- */
   .eyebrow-tag{
@@ -138,10 +167,10 @@
   .setup-footer .status{ font-family: var(--mono); font-size:12px; color: var(--ink-faint); }
 
   /* =========================================================
-     DASHBOARD
+     DASHBOARD & SET 1 PREP COMMON
      ========================================================= */
-  #dashboard{ display:none; }
-  #dashboard.active{ display:block; }
+  #dashboard, #set1prep-screen { display:none; }
+  #dashboard.active, #set1prep-screen.active { display:block; }
 
   .dash-header{ display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:36px; flex-wrap:wrap; }
   .dash-header h1{ font-size:34px; letter-spacing:-0.01em; }
@@ -198,7 +227,7 @@
   .subj-table .pct-cell{ display:flex; align-items:center; }
 
   /* subject explorer */
-  .explorer{ display:grid; grid-template-columns: 230px 1fr; gap:26px; align-items:start; }
+  .explorer{ display:grid; grid-template-columns: 240px 1fr; gap:26px; align-items:start; }
   @media (max-width:820px){ .explorer{ grid-template-columns: 1fr; } }
 
   .binder-tabs{ display:flex; flex-direction:column; gap:6px; position:sticky; top:20px; }
@@ -218,15 +247,56 @@
   .topic-panel-head h2{ font-size:24px; }
   .topic-panel-head .count-tag{ font-family: var(--mono); font-size:12px; color: var(--ink-faint); }
 
-  .topic-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap:14px; }
+  .topic-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap:16px; }
   .topic-card{
-    background: var(--card); border:1px solid var(--rule); border-radius:3px; padding:16px 18px;
-    display:flex; flex-direction:column; gap:10px; position:relative;
+    background: var(--card); border:1px solid var(--rule); border-radius:3px; padding:18px 20px;
+    display:flex; flex-direction:column; gap:12px; position:relative;
   }
   .topic-card.completed{ box-shadow: inset 0 0 0 1.5px var(--gold); }
-  .topic-card .t-name{ font-weight:600; font-size:15px; }
-  .topic-card .t-desc{ font-size:12.5px; color: var(--ink-soft); line-height:1.5; min-height: 34px; }
-  .topic-card .t-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:auto; }
+  .topic-card .t-name{ font-weight:600; font-size:15.5px; line-height: 1.3; color: var(--ink); }
+  .topic-card .t-desc{ font-size:13px; color: var(--ink-soft); line-height:1.5; }
+  
+  /* Set 1 detailed sections */
+  .t-explanation {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.5;
+    background: var(--paper-deep);
+    padding: 12px 14px;
+    border-radius: var(--radius);
+    border-left: 3.5px solid var(--ink);
+  }
+  .t-explanation strong { font-weight: 600; color: var(--ink); }
+  .t-questions {
+    font-size: 12.5px;
+    color: var(--ink);
+    background: rgba(34,41,58,0.03);
+    padding: 12px 14px;
+    border-radius: var(--radius);
+    border: 1px dashed var(--rule);
+  }
+  .t-questions-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--red);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .t-questions ol {
+    margin: 4px 0 0;
+    padding-left: 18px;
+  }
+  .t-questions li {
+    margin-bottom: 6px;
+    color: var(--ink-soft);
+    line-height: 1.45;
+  }
+  .t-questions li:last-child { margin-bottom: 0; }
+  .t-questions li strong { color: var(--ink); }
+
+  .topic-card .t-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:auto; padding-top:4px; }
   .rating-select{
     border:1.5px solid var(--rule); border-radius:3px; background: var(--paper); padding:7px 8px;
     font-family: var(--mono); font-weight:600; font-size:13px; color: var(--ink); flex:1;
@@ -254,6 +324,12 @@
 <body>
 
 <div class="wrap">
+
+  <!-- ================= TOP NAVIGATION ================= -->
+  <nav class="main-nav">
+    <button class="nav-tab active" id="nav-gcse-btn">GCSE Revision Binder</button>
+    <button class="nav-tab" id="nav-set1-btn">Set 1 Plus Prep</button>
+  </nav>
 
   <!-- ================= SETUP SCREEN ================= -->
   <div id="setup-screen">
@@ -376,6 +452,58 @@
     <footer class="note">saved locally in this browser · nothing leaves your device</footer>
   </div>
 
+  <!-- ================= SET 1 PLUS PREP SECTION ================= -->
+  <div id="set1prep-screen">
+    <div class="dash-header fade-in">
+      <div>
+        <span class="eyebrow-tag">Set 1 Plus Prep Tracker</span>
+        <h1 style="margin-top:8px;">Set 1 Plus Prep</h1>
+        <div class="sub" id="set1-subline">Comprehensive unit breakdown, topic explanations, skill tracker, and practice questions.</div>
+      </div>
+      <div class="dash-actions">
+        <button class="ghost-btn" id="set1-reset-btn">Reset Set 1 Prep</button>
+      </div>
+    </div>
+
+    <div class="metrics-row" id="set1-metrics-row"></div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Needs the most work</h2>
+        <span class="note">lowest-rated topics in set 1 plus prep</span>
+      </div>
+      <div class="focus-list" id="set1-focus-list"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h2>All Set 1 Plus Prep units</h2>
+        <span class="note">9–10 counts as complete</span>
+      </div>
+      <table class="subj-table">
+        <thead>
+          <tr><th>Unit</th><th>Average skill</th><th>Completed</th></tr>
+        </thead>
+        <tbody id="set1-table-body"></tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <div class="explorer">
+        <div class="binder-tabs" id="set1-binder-tabs"></div>
+        <div>
+          <div class="topic-panel-head">
+            <h2 id="set1-active-unit-name"></h2>
+            <span class="count-tag" id="set1-active-unit-count"></span>
+          </div>
+          <div class="topic-grid" id="set1-topic-grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="note">saved locally in this browser · set 1 plus prep progress tracked independently</footer>
+  </div>
+
 </div>
 
 <script>
@@ -383,7 +511,7 @@
 "use strict";
 
 /* =========================================================
-   TOPIC DATA
+   TOPIC DATA — GCSE BINDER
    ========================================================= */
 function T(id,name,desc){ return {id:id,name:name,desc:desc}; }
 
@@ -630,23 +758,518 @@ const RELIGIOUS_DEFS = {
 const OPTION_LIST = ["music","compsci","business","economics","dt_graphics","dt_resistant","geography","history","drama","pe","art"];
 
 /* =========================================================
+   TOPIC DATA — SET 1 PLUS PREP
+   ========================================================= */
+function S1T(id, name, desc, exp, q1, q2) {
+  return { id: id, name: name, desc: desc, exp: exp, q1: q1, q2: q2 };
+}
+
+const SET1_PREP_UNITS = [
+  {
+    key: "unit1",
+    name: "UNIT 1: Straight Line Graphs",
+    color: "#2E5C8A",
+    topics: [
+      S1T("u1_t1", "Draw lines parallel to the axes, y = x and y = −x",
+        "Horizontal, vertical, and diagonal base lines.",
+        "Lines of the form y = c are horizontal and parallel to the x-axis, while x = c are vertical and parallel to the y-axis. The line y = x passes through the origin at a 45° angle with gradient 1, and y = -x has gradient -1.",
+        "Draw the horizontal line y = 3 and find its point of intersection with the line y = x.",
+        "State the coordinates of the point where the line y = -x intersects x = -4."
+      ),
+      S1T("u1_t2", "Use a table of values",
+        "Plotting straight lines using coordinate tables.",
+        "To construct a graph using a table of values, pick several x-values (e.g. -2, 0, 2), calculate the corresponding y-values by substituting into the equation, and plot the resulting coordinate pairs.",
+        "Complete a table of values for y = 2x - 1 for x = -2, 0, 2.",
+        "Find the y-values for y = -3x + 5 when x = 1, 2, 3."
+      ),
+      S1T("u1_t3", "Compare gradients and intercepts",
+        "Analyzing steepness and vertical positioning.",
+        "The gradient (m) measures line steepness and direction (positive = uphill, negative = downhill). The y-intercept (c) is where the line crosses the vertical axis at (0, c). Parallel lines have equal gradients.",
+        "Which line is steeper: y = 4x - 2 or y = -5x + 1?",
+        "Do y = 3x + 2 and y = 3x - 7 ever intersect? Explain using their gradients."
+      ),
+      S1T("u1_t4", "Understand and use y = mx + c",
+        "Standard linear equation form and parameters.",
+        "In y = mx + c, m represents the gradient (change in y divided by change in x) and c represents the y-intercept. Any linear equation can be rearranged into this format to identify key features.",
+        "Identify the gradient and y-intercept of 2y = 6x + 8.",
+        "Write the equation of a line with gradient -2 and y-intercept (0, 5)."
+      ),
+      S1T("u1_t5", "Find the equation of a line from a graph",
+        "Extracting equations using two points.",
+        "Select two clear points on the line (x1, y1) and (x2, y2). Calculate gradient m = (y2 - y1) / (x2 - x1). Read the y-intercept c directly from the graph or substitute a point to find c.",
+        "Find the equation of a line passing through (0, 4) and (2, 10).",
+        "Determine the equation of a line passing through (1, 3) and (3, 11)."
+      ),
+      S1T("u1_t6", "Interpret gradient and intercepts of real-life graphs",
+        "Connecting real-world rates and initial values.",
+        "In contextual linear graphs (e.g. cost vs time), the gradient represents the rate of change (e.g. cost per hour or speed), while the y-intercept represents a fixed starting value or base charge.",
+        "On a taxi cost graph C = 1.50m + 3.00, what do 1.50 and 3.00 represent?",
+        "A distance-time graph has a gradient of 45. What does this value mean in context?"
+      )
+    ]
+  },
+  {
+    key: "unit2",
+    name: "UNIT 2: Forming and solving equations",
+    color: "#B23A2E",
+    topics: [
+      S1T("u2_t1", "One and two-step equations and inequalities (R)",
+        "Basic operations to isolate variables.",
+        "Solve equations or inequalities by performing inverse operations symmetrically on both sides to isolate the unknown variable.",
+        "Solve 3x + 7 = 22.",
+        "Solve 4x - 5 < 11 and express the range of x."
+      ),
+      S1T("u2_t2", "Equations and inequalities with brackets (R)",
+        "Expanding brackets prior to solving.",
+        "Expand brackets using the distributive law a(b + c) = ab + ac, combine any like terms, and apply inverse operations to isolate the unknown.",
+        "Solve 3(2x - 4) = 18.",
+        "Solve 5(x + 3) >= 35."
+      ),
+      S1T("u2_t3", "Inequalities with negative numbers",
+        "Flipping inequality signs with negative multipliers.",
+        "When multiplying or dividing an inequality by a negative number, the direction of the inequality symbol MUST be flipped (e.g. > becomes <).",
+        "Solve -4x > 20.",
+        "Solve 12 - 3x <= 3."
+      ),
+      S1T("u2_t4", "Solve equations with unknowns on both sides",
+        "Collecting like terms across the equals sign.",
+        "Rearrange the equation to gather all terms containing the variable on one side and all numerical constants on the opposite side before dividing.",
+        "Solve 7x - 3 = 2x + 12.",
+        "Solve 5x + 9 = 9x - 15."
+      ),
+      S1T("u2_t5", "Solve inequalities with unknowns on both sides",
+        "Inequalities with variables on both sides.",
+        "Collect variable terms on one side and numbers on the other, maintaining proper inequality orientation when operating with negative coefficients.",
+        "Solve 6x - 2 > 2x + 14.",
+        "Solve 3x + 10 <= 8x - 5."
+      ),
+      S1T("u2_t6", "Equations and inequalities in other mathematical contexts",
+        "Setting up equations from geometric contexts.",
+        "Form equations by translating geometric rules (e.g. perimeters, total angle sums) or real-world problem statements into algebraic expressions.",
+        "A rectangle has side lengths (x + 2) cm and (2x - 1) cm. If the perimeter is 32 cm, find x.",
+        "The interior angles of a triangle are x, 2x, and (x + 20). Calculate the smallest angle."
+      ),
+      S1T("u2_t7", "Formulae and equations",
+        "Substituting values into formulae and solving.",
+        "Substitute known numerical values into a formula to construct a single-variable equation, then solve for the target variable.",
+        "Given v = u + at, find t when v = 25, u = 5, and a = 4.",
+        "Given A = 0.5 * h * (a + b), find h when A = 40, a = 3, and b = 5."
+      ),
+      S1T("u2_t8", "Rearrange formulae (one-step and two-step)",
+        "Changing the subject of a formula.",
+        "Isolate a target variable on one side of a formula by applying step-by-step inverse operations.",
+        "Make x the subject of y = 4x - 9.",
+        "Make r the subject of A = pi * r^2 (for positive r)."
+      )
+    ]
+  },
+  {
+    key: "unit4",
+    name: "UNIT 4: Three-dimensional shapes",
+    color: "#3F6B4A",
+    topics: [
+      S1T("u4_t1", "Know names of 2-D and 3-D shapes",
+        "Classification of flat and solid geometric shapes.",
+        "Identify polygons by side counts and 3D solids by faces, edges, and vertices (e.g. cubes, cuboids, prisms, pyramids, cylinders, cones, spheres).",
+        "Name a 3D shape with 6 congruent square faces, 12 edges, and 8 vertices.",
+        "How many faces, edges, and vertices does a triangular-based pyramid have?"
+      ),
+      S1T("u4_t2", "Recognise prisms",
+        "Identifying uniform cross-section polyhedra.",
+        "A prism is a 3D solid with two identical parallel polygon bases connected by rectangular side faces, maintaining a uniform cross-section throughout its length.",
+        "Explain why a cylinder is related to a prism but technically not a polyhedron.",
+        "A prism has a 6-sided polygon cross-section. How many total faces does it have?"
+      ),
+      S1T("u4_t3", "Accurate nets of cuboids and other 3-D shapes",
+        "Constructing dimensionally accurate flat nets.",
+        "A net is a 2D layout that folds into a 3D solid. Every adjacent edge in the net must match in length.",
+        "How many rectangular faces must be drawn in a complete net of a 3 cm x 4 cm x 5 cm cuboid?",
+        "Sketch the arrangement of faces required to form a net for a square-based pyramid."
+      ),
+      S1T("u4_t4", "Sketch and recognise nets of cuboids and other 3-D shapes",
+        "Visualising folding patterns of 3D objects.",
+        "Mentally unfold 3D shapes into 2D plans and distinguish valid nets from patterns that overlap or miss faces when folded.",
+        "Identify which faces are opposite each other in a standard cross-shaped cube net.",
+        "Can a flat layout of 5 squares fold into a closed cube? Explain."
+      ),
+      S1T("u4_t5", "Find area of 2-D shapes",
+        "Area calculations for polygons and composite shapes.",
+        "Calculate surface area using standard formulas: Rectangle (l*w), Triangle (0.5*b*h), Parallelogram (b*h), and Trapezium (0.5*(a+b)*h).",
+        "Find the area of a trapezium with parallel sides 6 cm and 10 cm, and height 5 cm.",
+        "Calculate the area of a parallelogram with base 8.5 cm and perpendicular height 4 cm."
+      ),
+      S1T("u4_t6", "Surface area of cubes and cuboids",
+        "Summing outer surface areas of cuboids.",
+        "Find total surface area by summing all face areas. For a cube: SA = 6s^2. For a cuboid: SA = 2(lw + lh + wh).",
+        "Calculate the total surface area of a cube with side length 5 cm.",
+        "Find the total surface area of a cuboid measuring 3 cm by 4 cm by 6 cm."
+      ),
+      S1T("u4_t7", "Surface area of triangular prisms",
+        "Combining triangular ends and rectangular sides.",
+        "Calculate the surface area of a triangular prism by adding the areas of the 2 triangular end faces and the 3 rectangular side faces.",
+        "Find the surface area of a right-triangular prism with triangle sides 3 cm, 4 cm, 5 cm and length 10 cm.",
+        "Calculate the surface area of an equilateral triangular prism with side 6 cm, triangle height 5.2 cm, and length 8 cm."
+      ),
+      S1T("u4_t8", "Surface area of a cylinder",
+        "Circular bases plus curved surface area.",
+        "Total surface area of a cylinder = 2*pi*r^2 + 2*pi*r*h, where 2*pi*r^2 is the top and bottom circles and 2*pi*r*h is the unrolled rectangular curved surface.",
+        "Calculate the curved surface area of a cylinder with radius 4 cm and height 10 cm in terms of pi.",
+        "Find the total surface area of a cylinder with diameter 10 cm and height 12 cm to 1 d.p."
+      ),
+      S1T("u4_t9", "Volume of cubes and cuboids",
+        "3D space enclosed by cubes and cuboids.",
+        "Volume measures 3D capacity. Volume of cube = s^3. Volume of cuboid = length * width * height.",
+        "Find the volume of a cuboid measuring 7 cm by 3 cm by 4 cm.",
+        "A cube has a volume of 216 cm^3. Find its side length."
+      ),
+      S1T("u4_t10", "Volume of other 3-D shapes – prisms and cylinders",
+        "Cross-sectional area multiplied by length.",
+        "The volume of any prism or cylinder equals cross-sectional area multiplied by length/height: V = Area * length.",
+        "Calculate the volume of a cylinder with radius 3 cm and height 8 cm in terms of pi.",
+        "A triangular prism has cross-sectional area 15 cm^2 and length 12 cm. Find its volume."
+      )
+    ]
+  },
+  {
+    key: "unit6",
+    name: "UNIT 6: Number",
+    color: "#7A4F9E",
+    topics: [
+      S1T("u6_t1", "Integers, real and rational numbers",
+        "Classifying real number sets.",
+        "Integers are whole numbers. Rational numbers can be expressed as a fraction p/q of integers. Real numbers include all rational and irrational numbers.",
+        "Explain why sqrt(2) is a real number but not a rational number.",
+        "Classify the following numbers as rational or irrational: -5, 0.333..., pi, sqrt(16)."
+      ),
+      S1T("u6_t2", "Work with directed number",
+        "Operations with positive and negative values.",
+        "Apply sign rules: adding a negative is subtraction, subtracting a negative is addition. Multiplying/dividing like signs gives positive, unlike signs gives negative.",
+        "Calculate -8 - (-13) + (-4).",
+        "Evaluate (-6) * (-4) / (-3)."
+      ),
+      S1T("u6_t3", "Solve problems with integers",
+        "Contextual multi-step integer arithmetic.",
+        "Apply order of operations (BIDMAS) and directed number rules to multi-step real-world integer problems.",
+        "Temperature at midnight was -5°C. By noon it rose by 12°C, then dropped 4°C by evening. Find the final temperature.",
+        "A bank balance is -$45. After depositing $120 and paying a $35 bill, what is the new balance?"
+      ),
+      S1T("u6_t4", "Solve problems with decimals",
+        "Decimal calculations and alignment.",
+        "Perform addition, subtraction, multiplication, and division with decimal numbers, maintaining correct decimal place alignment.",
+        "Evaluate 14.25 * 0.8 without a calculator.",
+        "A ribbon of length 17.55 m is cut into 9 equal pieces. Find the length of each piece."
+      ),
+      S1T("u6_t5", "HCF and LCM",
+        "Highest Common Factors and Lowest Common Multiples.",
+        "Find the HCF (largest factor shared by numbers) and LCM (smallest multiple shared by numbers) using prime factorisation trees or Venn diagrams.",
+        "Find the HCF and LCM of 24 and 36.",
+        "Bus A runs every 12 minutes and Bus B every 18 minutes. If they leave together at 9:00 AM, when do they next leave together?"
+      ),
+      S1T("u6_t6", "Adding and subtracting fractions",
+        "Common denominators and mixed numbers.",
+        "Convert fractions to common denominators (LCM of denominators), add or subtract numerators, and simplify or convert to mixed numbers.",
+        "Calculate 3/4 + 2/5 as a mixed number.",
+        "Evaluate 2 1/3 - 1 3/4."
+      ),
+      S1T("u6_t7", "Multiplying and dividing fractions",
+        "Product and reciprocal rules for fractions.",
+        "Multiply numerators together and denominators together. For division, multiply by the reciprocal of the second fraction ('flip and multiply').",
+        "Calculate (5/8) * (4/15) in simplest form.",
+        "Calculate 1 1/2 / (3/4)."
+      ),
+      S1T("u6_t8", "Solving problems with fractions",
+        "Applied fraction arithmetic in word problems.",
+        "Solve multi-step word problems involving fractions of amounts, remaining shares, and reverse fraction logic.",
+        "A class has 30 students. 3/5 are girls and 1/3 of the girls wear glasses. How many girls wear glasses?",
+        "After spending 2/5 of his money on books and 1/4 on food, Sam has $42 left. How much did he start with?"
+      ),
+      S1T("u6_t9", "Numbers in standard form (including multiplying and dividing)",
+        "Scientific notation and index arithmetic.",
+        "Standard form is A * 10^n where 1 <= A < 10 and n is an integer. Apply index laws when multiplying and dividing standard form numbers.",
+        "Write 0.00045 and 320,000 in standard form.",
+        "Calculate (4 * 10^5) * (3 * 10^3) and give the answer in standard form."
+      )
+    ]
+  },
+  {
+    key: "unit7",
+    name: "UNIT 7: Percentages",
+    color: "#C99A2E",
+    topics: [
+      S1T("u7_t1", "Use the equivalence of fractions, decimals and percentages (R)",
+        "Converting between representations.",
+        "Convert seamlessly between fractions, decimals, and percentages (e.g. 3/8 = 0.375 = 37.5%) to compare and calculate values.",
+        "Convert 7/20 to a decimal and percentage.",
+        "Order from smallest to largest: 0.62, 65%, 3/5, 0.605."
+      ),
+      S1T("u7_t2", "Calculate percentage increase and decrease (R)",
+        "Applying multiplier methods.",
+        "Calculate increases or decreases using decimal multipliers: Multiplier = 1 + (r/100) for increase, 1 - (r/100) for decrease.",
+        "Increase $180 by 15%.",
+        "Decrease 250 kg by 12%."
+      ),
+      S1T("u7_t3", "Express a change as a percentage (R)",
+        "Calculating percentage change.",
+        "Percentage change = (Actual Change / Original Value) * 100%.",
+        "Price of a shirt increases from $40 to $48. Find the percentage increase.",
+        "Weight drops from 80 kg to 68 kg. Calculate the percentage decrease."
+      ),
+      S1T("u7_t4", "Solve ‘reverse’ percentage problems",
+        "Finding original values before percentage changes.",
+        "Find the original amount before a percentage change by setting Original * Multiplier = New Value, so Original = New Value / Multiplier.",
+        "A coat costs $102 after a 15% discount. Find its original price.",
+        "A town's population grows by 8% to 54,000. What was the original population?"
+      ),
+      S1T("u7_t5", "Recognise and solve percentage problems (non-calculator)",
+        "Mental percentage strategies.",
+        "Use key benchmark percentages (10%, 5%, 1%, 25%, 50%) to calculate mental percentage increases and decreases.",
+        "Calculate 35% of $240 without a calculator.",
+        "A price of $600 increases by 17.5%. Calculate the new price without a calculator."
+      ),
+      S1T("u7_t6", "Recognise and solve percentage problems (calculator) (R)",
+        "Calculator percentage calculations.",
+        "Use efficient decimal multipliers on a calculator for complex or multi-step percentage problems.",
+        "A house value increases by 3.4% each year. If current value is $250,000, find its value after 1 year.",
+        "Calculate 14.5% of $8,400."
+      )
+    ]
+  },
+  {
+    key: "unit8",
+    name: "UNIT 8: Maths and Money",
+    color: "#B5652D",
+    topics: [
+      S1T("u8_t1", "Calculate simple interest",
+        "Fixed rate interest calculations.",
+        "Simple interest is calculated solely on the initial principal: Interest = (P * r * t) / 100.",
+        "Calculate simple interest earned on $1,200 invested at 4% p.a. for 3 years.",
+        "Find total amount after investing $500 at 5% simple interest p.a. for 4 years."
+      ),
+      S1T("u8_t2", "Calculate compound interest",
+        "Interest earning interest over time.",
+        "Compound interest accrues on initial principal plus accumulated interest: Total = P * (1 + r/100)^t.",
+        "Calculate final amount when $2,000 is invested at 5% compound interest p.a. for 3 years.",
+        "Calculate total interest earned on $5,000 invested at 3% compound interest p.a. for 4 years."
+      ),
+      S1T("u8_t3", "Solve problems with Value Added Tax",
+        "Adding and removing VAT percentages.",
+        "VAT is a percentage tax added to goods. To add 20% VAT, multiply by 1.20; to find price before 20% VAT, divide by 1.20.",
+        "An item costs $85 before 20% VAT. Find total price including VAT.",
+        "Total price including 20% VAT is $144. Find price before VAT."
+      ),
+      S1T("u8_t4", "Calculate wages and taxes",
+        "Gross pay, overtime, and net tax calculation.",
+        "Calculate gross pay from basic hours and overtime rates, then subtract income tax (calculated above personal tax allowance).",
+        "A worker does 35 hours at $12/hr and 5 overtime hours at time-and-a-half ($18/hr). Find gross pay.",
+        "Annual salary is $30,000. First $12,500 is tax-free, remaining is taxed at 20%. Calculate tax paid."
+      ),
+      S1T("u8_t5", "Solve problems with exchange rates",
+        "Currency conversions using exchange rates.",
+        "Convert currencies by multiplying or dividing by the exchange rate: Currency B = Currency A * Rate.",
+        "Exchange rate is 1 GBP = 1.25 USD. Convert 400 GBP to USD.",
+        "Exchange rate is 1 EUR = 1.10 USD. Convert 550 USD back to EUR."
+      ),
+      S1T("u8_t6", "Solve unit pricing problems",
+        "Comparing cost per unit across choices.",
+        "Determine best financial value by calculating unit cost (Price / Quantity) or comparing standard quantity costs.",
+        "Pack A: 500g for $2.50. Pack B: 750g for $3.60. Which pack is better value per gram?",
+        "6 cans of drink cost $4.50. How much do 10 cans cost at the same rate?"
+      )
+    ]
+  },
+  {
+    key: "unit9",
+    name: "UNIT 9: Deduction",
+    color: "#1F6F6F",
+    topics: [
+      S1T("u9_t1", "Angles in parallel lines (R)",
+        "Alternate, corresponding, and co-interior angles.",
+        "Alternate angles are equal (Z-shape). Corresponding angles are equal (F-shape). Co-interior angles sum to 180° (C-shape).",
+        "Parallel lines are cut by a transversal line. If one angle is 65°, find its alternate angle and co-interior angle.",
+        "Two interior angles on the same side of a transversal are (2x + 10)° and (3x - 20)°. Find x."
+      ),
+      S1T("u9_t2", "Solving angles problems (using chains of reasoning)",
+        "Step-by-step geometric angle proofs.",
+        "Combine angle facts (straight line = 180°, triangle sum = 180°, opposite angles equal) into step-by-step logical reasoning with reasons.",
+        "Find angle x in a diagram containing an isosceles triangle and parallel lines, stating reasons.",
+        "Prove that the exterior angle of a triangle equals the sum of two opposite interior angles."
+      ),
+      S1T("u9_t3", "Angles problems with algebra",
+        "Setting up algebraic angle equations.",
+        "Express geometric angle relationships as equations and solve for unknown variables.",
+        "Four angles around a point are 2x, 3x, 4x, and 90°. Find x and the largest angle.",
+        "An isosceles triangle has base angles (2x + 5)° and vertex angle (x + 30)°. Find x."
+      ),
+      S1T("u9_t4", "Conjectures with angles and shapes",
+        "Formulating and testing geometric hypotheses.",
+        "Test geometric conjectures using logical proofs or counterexamples.",
+        "Test conjecture: 'Is the sum of exterior angles of any convex polygon always 360°?' Explain.",
+        "Test conjecture: 'Can a triangle have two obtuse angles?' Justify your answer."
+      ),
+      S1T("u9_t5", "Angles in polygons",
+        "Interior and exterior angle sums of polygons.",
+        "Sum of interior angles = (n - 2) * 180°. Each interior angle of regular polygon = ((n - 2) * 180°) / n. Sum of exterior angles = 360°.",
+        "Calculate sum of interior angles of a regular decagon (10 sides) and each interior angle.",
+        "A regular polygon has an exterior angle of 24°. How many sides does it have?"
+      )
+    ]
+  },
+  {
+    key: "unit11",
+    name: "UNIT 11: Pythagoras' Theorem",
+    color: "#2E7D8C",
+    topics: [
+      S1T("u11_t1", "Squares and square roots",
+        "Perfect squares and radical simplification.",
+        "a^2 = a * a. Square root sqrt(x) is inverse. Recognize square numbers and simplify surds into a*sqrt(b) form.",
+        "Evaluate sqrt(196) and 15^2.",
+        "Simplify sqrt(50) into a*sqrt(b) form."
+      ),
+      S1T("u11_t2", "Identify the hypotenuse of a right-angled triangle",
+        "Locating the longest side opposite 90°.",
+        "The hypotenuse c is always the longest side of a right-angled triangle, located directly opposite the right angle.",
+        "In right triangle ABC with right angle at B, which side is the hypotenuse?",
+        "Triangle sides are 9 cm, 12 cm, 15 cm. Which side must be the hypotenuse if it is right-angled?"
+      ),
+      S1T("u11_t3", "Determine whether a triangle is right-angled",
+        "Testing the converse of Pythagoras' Theorem.",
+        "Test converse of Pythagoras: if a^2 + b^2 = c^2 holds for side lengths, the triangle is right-angled.",
+        "Is a triangle with sides 7 cm, 24 cm, 25 cm right-angled? Show working.",
+        "Is a triangle with sides 5 cm, 8 cm, 10 cm right-angled? Explain."
+      ),
+      S1T("u11_t4", "Calculate the hypotenuse of a right-angled triangle",
+        "Finding hypotenuse using c = sqrt(a^2 + b^2).",
+        "Use c = sqrt(a^2 + b^2) where a and b are shorter perpendicular sides.",
+        "Find hypotenuse c when shorter sides are 6 cm and 8 cm.",
+        "Find hypotenuse when shorter sides are 5 cm and 12 cm."
+      ),
+      S1T("u11_t5", "Calculate missing sides in right-angled triangles",
+        "Finding shorter side using a = sqrt(c^2 - b^2).",
+        "Calculate a missing shorter side using a = sqrt(c^2 - b^2) where c is hypotenuse and b is known side.",
+        "Hypotenuse is 13 cm and one side is 5 cm. Find the missing side length.",
+        "Hypotenuse is 10 cm and one side is 7 cm. Calculate missing side to 2 d.p."
+      ),
+      S1T("u11_t6", "Use Pythagoras theorem on coordinate axes",
+        "Distance between coordinate points.",
+        "Distance between points (x1, y1) and (x2, y2) is d = sqrt((x2 - x1)^2 + (y2 - y1)^2).",
+        "Find distance between points A(1, 2) and B(4, 6).",
+        "Calculate distance between P(-2, 3) and Q(4, -5)."
+      ),
+      S1T("u11_t7", "Explore proofs of Pythagoras’ theorem",
+        "Geometric and algebraic proofs of a^2 + b^2 = c^2.",
+        "Explore geometric proofs (rearranging 4 right triangles in a square of side a+b) and algebraic expansions (a+b)^2 = c^2 + 4(0.5ab).",
+        "Explain how expanding (a + b)^2 = a^2 + 2ab + b^2 proves a^2 + b^2 = c^2 when equated to square area c^2 + 2ab.",
+        "Describe Bhaskara's visual dissection proof of Pythagoras' theorem."
+      )
+    ]
+  },
+  {
+    key: "unit13",
+    name: "UNIT 13: Solving ratio and proportion problems",
+    color: "#5B7A3F",
+    topics: [
+      S1T("u13_t1", "Solve problems with direct proportion",
+        "Directly scaling proportional quantities.",
+        "Direct proportion means quantities scale together at constant ratio y = kx where k = y/x.",
+        "If 8 notebooks cost $12, how much do 14 notebooks cost?",
+        "y is directly proportional to x. When x = 5, y = 35. Find y when x = 9."
+      ),
+      S1T("u13_t2", "Direct proportion and conversion graphs",
+        "Linear proportion graphs through origin.",
+        "Direct proportion graphs are straight lines passing through the origin (0, 0) with gradient equal to constant k.",
+        "A conversion graph converts miles to km (5 miles = 8 km). Find equation of line k = km/miles.",
+        "Read conversion graph: How many km is 15 miles if gradient is 1.6?"
+      ),
+      S1T("u13_t3", "Solve problems with inverse proportion",
+        "Inverse proportionality relations.",
+        "In inverse proportion, as one variable increases, the other decreases proportionally: y = k / x or x * y = k.",
+        "It takes 4 builders 6 days to build a wall. How many days would it take 3 builders at the same rate?",
+        "y is inversely proportional to x. When x = 4, y = 10. Find y when x = 8."
+      ),
+      S1T("u13_t4", "Solve ratio problems given the whole or a part",
+        "Dividing into ratio parts or finding total.",
+        "Divide quantity by sum of ratio parts to find value of 1 part, or calculate total/other parts given one part.",
+        "Divide $350 in ratio 2 : 3 : 2.",
+        "In a ratio 3 : 5 of boys to girls, there are 45 girls. How many boys and total students are there?"
+      ),
+      S1T("u13_t5", "Solve ‘best buy’ problems",
+        "Comparing value per unit mass or cost.",
+        "Compare unit prices or standard quantity costs across packaging options to determine financial value.",
+        "Option A: 400g for $1.80. Option B: 650g for $2.86. Which is better value per 100g?",
+        "3 litres for $2.10 vs 5 litres for $3.40. Which option is cheaper per litre?"
+      )
+    ]
+  },
+  {
+    key: "unit14",
+    name: "UNIT 14: Rates",
+    color: "#4C7A6B",
+    topics: [
+      S1T("u14_t1", "Solve speed, distance and time problems without a calculator",
+        "Speed, distance, time formula calculations.",
+        "Apply standard formulas Speed = Distance / Time, Distance = Speed * Time, Time = Distance / Speed using mental math.",
+        "A car travels 150 miles in 3 hours 30 mins. Calculate average speed in mph without a calculator.",
+        "How far does a cyclist travel in 45 minutes at average speed of 16 km/h?"
+      ),
+      S1T("u14_t2", "Solve speed, distance and time problems with a calculator",
+        "Decimal time conversions and precise rates.",
+        "Convert minutes into decimal hours (e.g. 15 mins = 0.25 hrs) and calculate precise speeds and distances.",
+        "Travel distance 238 km at 68 km/h. Calculate time taken in hours and minutes.",
+        "Average speed 54 mph for 3 hours 20 mins. Calculate total distance."
+      ),
+      S1T("u14_t3", "Use distance/time graphs",
+        "Interpreting gradients on distance-time axes.",
+        "Gradient of distance-time graph = speed. Flat horizontal line = stationary. Steeper slope = faster speed.",
+        "On distance-time graph, object covers 60 m from t = 10s to t = 25s. Calculate speed during interval.",
+        "Describe motion represented by horizontal segment on distance-time graph."
+      ),
+      S1T("u14_t4", "Solve problems with density, mass and volume",
+        "Density = Mass / Volume calculations.",
+        "Density = Mass / Volume, Mass = Density * Volume, Volume = Mass / Density. Units: g/cm^3 or kg/m^3.",
+        "Metal block has mass 450g and volume 50 cm^3. Calculate density in g/cm^3.",
+        "Gold has density 19.3 g/cm^3. Calculate mass of gold bar with volume 120 cm^3."
+      ),
+      S1T("u14_t5", "Solve flow problems and their graphs",
+        "Liquid flow rates and container filling graphs.",
+        "Flow rate = Volume / Time. Container geometry determines rate of height change over time on filling graphs.",
+        "Tap fills tank with 180 litres in 15 minutes. Calculate flow rate in L/min.",
+        "A container fills at constant flow rate. Graph of height vs time is straight line. What shape is container?"
+      ),
+      S1T("u14_t6", "Rates of change and their units",
+        "Compound units and rate conversions.",
+        "Identify compound units (m/s, g/cm^3, L/min) and perform rate conversions.",
+        "A tank loses 45 litres of water over 6 hours. Calculate rate of leakage in litres/hour.",
+        "Express speed 72 km/h in metres per second (m/s)."
+      )
+    ]
+  }
+];
+
+/* =========================================================
    STATE / STORAGE
    ========================================================= */
 const SETUP_KEY = "gcseBinder_setup_v1";
 const RATINGS_KEY = "gcseBinder_ratings_v1";
+const SET1_RATINGS_KEY = "gcseBinder_set1_ratings_v1";
 
 let setup = null;     // { mathsType, scienceType, options:[...3], language, religious }
 let ratings = {};      // "subjectKey::topicId" -> 1..10
+let set1Ratings = {};  // "unitKey::topicId" -> 1..10
+
 let activeSubjectKey = null;
+let set1ActiveUnitKey = SET1_PREP_UNITS[0].key;
+let activeScreen = "gcse"; // "gcse" or "set1"
 
 function loadState(){
   try{ setup = JSON.parse(localStorage.getItem(SETUP_KEY)); }catch(e){ setup = null; }
   try{ ratings = JSON.parse(localStorage.getItem(RATINGS_KEY)) || {}; }catch(e){ ratings = {}; }
+  try{ set1Ratings = JSON.parse(localStorage.getItem(SET1_RATINGS_KEY)) || {}; }catch(e){ set1Ratings = {}; }
 }
 function saveSetup(){ localStorage.setItem(SETUP_KEY, JSON.stringify(setup)); }
 function saveRatings(){ localStorage.setItem(RATINGS_KEY, JSON.stringify(ratings)); }
+function saveSet1Ratings(){ localStorage.setItem(SET1_RATINGS_KEY, JSON.stringify(set1Ratings)); }
 
-/* Build the active subject list from a setup object */
+/* Build active subjects for GCSE Binder */
 function buildActiveSubjects(cfg){
   const list = [];
   list.push(Object.assign({key:"english_lang"}, ENGLISH_LANG));
@@ -677,13 +1300,57 @@ function setRating(subjectKey, topicId, val){
   saveRatings();
 }
 
+function set1RatingFor(unitKey, topicId){
+  const v = set1Ratings[unitKey+"::"+topicId];
+  return (typeof v === "number") ? v : 0;
+}
+function set1SetRating(unitKey, topicId, val){
+  set1Ratings[unitKey+"::"+topicId] = val;
+  saveSet1Ratings();
+}
+
+function bandFor(r){
+  if(r===0) return "unrated";
+  if(r<=3) return "low";
+  if(r<=6) return "mid";
+  if(r<=8) return "high";
+  return "complete";
+}
+
+/* =========================================================
+   NAVIGATION LOGIC
+   ========================================================= */
+const navGcseBtn = document.getElementById("nav-gcse-btn");
+const navSet1Btn = document.getElementById("nav-set1-btn");
+
+function switchScreen(target){
+  activeScreen = target;
+  navGcseBtn.classList.toggle("active", target === "gcse");
+  navSet1Btn.classList.toggle("active", target === "set1");
+
+  if(target === "gcse"){
+    document.getElementById("set1prep-screen").classList.remove("active");
+    if(setup && setup.mathsType && setup.scienceType && setup.options && setup.options.length===3 && setup.language && setup.religious){
+      openDashboard();
+    } else {
+      openSetupScreen(setup);
+    }
+  } else {
+    document.getElementById("setup-screen").classList.remove("active");
+    document.getElementById("dashboard").classList.remove("active");
+    openSet1PrepScreen();
+  }
+}
+
+navGcseBtn.addEventListener("click", function(){ switchScreen("gcse"); });
+navSet1Btn.addEventListener("click", function(){ switchScreen("set1"); });
+
 /* =========================================================
    SETUP SCREEN LOGIC
    ========================================================= */
 const draft = { mathsType:null, scienceType:null, options:[], language:null, religious:null };
 
 function renderSetupChoices(){
-  // options grid
   const optWrap = document.getElementById("options-grid");
   optWrap.innerHTML = "";
   OPTION_LIST.forEach(function(k){
@@ -721,7 +1388,6 @@ function renderSetupChoices(){
     relWrap.appendChild(tile);
   });
 
-  // reflect state
   optWrap.querySelectorAll(".choice-tile").forEach(function(t){
     const on = draft.options.indexOf(t.dataset.key) > -1;
     t.classList.toggle("picked", on);
@@ -775,6 +1441,7 @@ function validateSetup(){
 
 function openSetupScreen(prefill){
   document.getElementById("dashboard").classList.remove("active");
+  document.getElementById("set1prep-screen").classList.remove("active");
   document.getElementById("setup-screen").classList.add("active");
   draft.mathsType = prefill ? prefill.mathsType : null;
   draft.scienceType = prefill ? prefill.scienceType : null;
@@ -792,7 +1459,6 @@ function openSetupScreen(prefill){
 
 document.getElementById("setup-submit").addEventListener("click", function(){
   const wasEditing = !!setup;
-  const prevKeys = wasEditing ? buildActiveSubjects(setup).map(function(s){return s.key;}) : [];
   setup = { mathsType: draft.mathsType, scienceType: draft.scienceType, options: draft.options.slice(), language: draft.language, religious: draft.religious };
   saveSetup();
 
@@ -800,7 +1466,6 @@ document.getElementById("setup-submit").addEventListener("click", function(){
     const newKeys = buildActiveSubjects(setup).map(function(s){return s.key;});
     Object.keys(ratings).forEach(function(rk){
       const subjKey = rk.split("::")[0];
-      if(newKeys.indexOf(subjKey) === -1){ delete ratings[subjKey && rk]; }
       if(newKeys.indexOf(subjKey) === -1){ delete ratings[rk]; }
     });
     saveRatings();
@@ -812,7 +1477,7 @@ wireToggle("maths-toggle","mathsType");
 wireToggle("science-toggle","scienceType");
 
 /* =========================================================
-   DASHBOARD LOGIC
+   DASHBOARD LOGIC — GCSE BINDER
    ========================================================= */
 function computeSubjectStats(subj){
   const n = subj.topics.length;
@@ -825,16 +1490,9 @@ function computeSubjectStats(subj){
   return { avg: n? (sum/n) : 0, completed: completed, total: n, pct: n? Math.round(completed/n*100) : 0 };
 }
 
-function bandFor(r){
-  if(r===0) return "unrated";
-  if(r<=3) return "low";
-  if(r<=6) return "mid";
-  if(r<=8) return "high";
-  return "complete";
-}
-
 function openDashboard(){
   document.getElementById("setup-screen").classList.remove("active");
+  document.getElementById("set1prep-screen").classList.remove("active");
   document.getElementById("dashboard").classList.add("active");
 
   const subjects = buildActiveSubjects(setup);
@@ -980,15 +1638,192 @@ function renderTopics(subjects){
   });
 }
 
-document.getElementById("edit-subjects-btn").addEventListener("click", function(){
-  openSetupScreen(setup);
-});
+document.getElementById("edit-subjects-btn").addEventListener("click", function(){ openSetupScreen(setup); });
 document.getElementById("reset-btn").addEventListener("click", function(){
   if(confirm("This clears every subject and rating from this browser. Continue?")){
     localStorage.removeItem(SETUP_KEY);
     localStorage.removeItem(RATINGS_KEY);
     setup = null; ratings = {}; activeSubjectKey = null;
     openSetupScreen(null);
+  }
+});
+
+/* =========================================================
+   SET 1 PLUS PREP LOGIC
+   ========================================================= */
+function computeSet1UnitStats(unit){
+  const n = unit.topics.length;
+  let sum = 0, completed = 0;
+  unit.topics.forEach(function(t){
+    const r = set1RatingFor(unit.key, t.id);
+    sum += r;
+    if(r >= 9) completed++;
+  });
+  return { avg: n ? (sum/n) : 0, completed: completed, total: n, pct: n ? Math.round(completed/n*100) : 0 };
+}
+
+function openSet1PrepScreen(){
+  document.getElementById("setup-screen").classList.remove("active");
+  document.getElementById("dashboard").classList.remove("active");
+  document.getElementById("set1prep-screen").classList.add("active");
+
+  const totalTopicsCount = SET1_PREP_UNITS.reduce(function(a,u){ return a + u.topics.length; }, 0);
+  document.getElementById("set1-subline").textContent =
+    SET1_PREP_UNITS.length + " Units · " + totalTopicsCount + " topics with detailed explanations & example questions";
+
+  renderSet1Metrics();
+  renderSet1FocusList();
+  renderSet1UnitTable();
+  renderSet1Tabs();
+  renderSet1Topics();
+  window.scrollTo(0,0);
+}
+
+function renderSet1Metrics(){
+  const stats = SET1_PREP_UNITS.map(function(u){ return { unit: u, stat: computeSet1UnitStats(u) }; });
+  const totalTopics = stats.reduce(function(a,u){ return a + u.stat.total; }, 0);
+  const totalSum = stats.reduce(function(a,u){ return a + u.stat.avg * u.stat.total; }, 0);
+  const overallAvg = totalTopics ? (totalSum / totalTopics) : 0;
+  const totalCompleted = stats.reduce(function(a,u){ return a + u.stat.completed; }, 0);
+  const overallPct = totalTopics ? Math.round(totalCompleted / totalTopics * 100) : 0;
+
+  const best = stats.slice().sort(function(a,b){ return b.stat.avg - a.stat.avg; })[0];
+  const worst = stats.slice().sort(function(a,b){ return a.stat.avg - b.stat.avg; })[0];
+
+  const row = document.getElementById("set1-metrics-row");
+  row.innerHTML =
+    '<div class="metric-card hero">'+
+      '<div class="label">Set 1 Overall skill</div>'+
+      '<div class="value">'+overallAvg.toFixed(1)+'<small>/10</small></div>'+
+      '<div class="sub-line">'+overallPct+'% of set 1 topics complete</div>'+
+    '</div>'+
+    '<div class="metric-card">'+
+      '<div class="label">Best unit</div>'+
+      '<div class="value" style="font-size:20px;">'+ (best? '<span class="swatch" style="background:'+best.unit.color+'"></span>'+best.unit.name.split(':')[0] : '—') +'</div>'+
+      '<div class="sub-line">'+ (best? best.stat.avg.toFixed(1)+' / 10 average' : 'Not enough data yet') +'</div>'+
+    '</div>'+
+    '<div class="metric-card">'+
+      '<div class="label">Needs work</div>'+
+      '<div class="value" style="font-size:20px;">'+ (worst? '<span class="swatch" style="background:'+worst.unit.color+'"></span>'+worst.unit.name.split(':')[0] : '—') +'</div>'+
+      '<div class="sub-line">'+ (worst? worst.stat.avg.toFixed(1)+' / 10 average' : 'Not enough data yet') +'</div>'+
+    '</div>'+
+    '<div class="metric-card">'+
+      '<div class="label">Topics complete</div>'+
+      '<div class="value">'+totalCompleted+'<small>/'+totalTopics+'</small></div>'+
+      '<div class="sub-line">rated 9 or 10</div>'+
+    '</div>';
+}
+
+function renderSet1FocusList(){
+  const all = [];
+  SET1_PREP_UNITS.forEach(function(u){
+    u.topics.forEach(function(t){
+      all.push({ unit: u, topic: t, r: set1RatingFor(u.key, t.id) });
+    });
+  });
+  all.sort(function(a,b){ return a.r - b.r; });
+  const top = all.slice(0, 10);
+
+  const wrap = document.getElementById("set1-focus-list");
+  wrap.innerHTML = "";
+  top.forEach(function(row, i){
+    const div = document.createElement("div");
+    div.className = "focus-row";
+    div.innerHTML =
+      '<span class="rank">'+(i+1)+'</span>'+
+      '<span class="name">'+row.topic.name+'<span class="subj">'+row.unit.name+'</span></span>'+
+      '<span class="bar-track"><span class="bar-fill" style="width:'+(row.r*10)+'%; background:'+ (row.r===0? '#8A8F9E' : row.unit.color) +'"></span></span>'+
+      '<span class="score">'+ (row.r===0? "unrated" : row.r+" / 10") +'</span>';
+    wrap.appendChild(div);
+  });
+}
+
+function renderSet1UnitTable(){
+  const body = document.getElementById("set1-table-body");
+  body.innerHTML = "";
+  SET1_PREP_UNITS.forEach(function(u){
+    const stat = computeSet1UnitStats(u);
+    const tr = document.createElement("tr");
+    tr.innerHTML =
+      '<td><span class="sname"><span class="dot" style="background:'+u.color+'"></span>'+u.name+'</span></td>'+
+      '<td class="avg">'+stat.avg.toFixed(1)+' / 10</td>'+
+      '<td><span class="pct-cell"><span class="pct-track"><span class="pct-fill" style="width:'+stat.pct+'%;"></span></span>'+stat.pct+'% ('+stat.completed+'/'+stat.total+')</span></td>';
+    body.appendChild(tr);
+  });
+}
+
+function renderSet1Tabs(){
+  const wrap = document.getElementById("set1-binder-tabs");
+  wrap.innerHTML = "";
+  SET1_PREP_UNITS.forEach(function(u){
+    const stat = computeSet1UnitStats(u);
+    const btn = document.createElement("button");
+    btn.className = "binder-tab" + (u.key === set1ActiveUnitKey ? " active" : "");
+    btn.style.setProperty("--tab-color", u.color);
+    btn.innerHTML = '<span>'+u.name+'</span><span class="tabmini">'+stat.avg.toFixed(1)+'</span>';
+    btn.addEventListener("click", function(){
+      set1ActiveUnitKey = u.key;
+      renderSet1Tabs();
+      renderSet1Topics();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function renderSet1Topics(){
+  const unit = SET1_PREP_UNITS.find(function(u){ return u.key === set1ActiveUnitKey; });
+  if(!unit) return;
+  const stat = computeSet1UnitStats(unit);
+  document.getElementById("set1-active-unit-name").textContent = unit.name;
+  document.getElementById("set1-active-unit-count").textContent = stat.completed + " / " + stat.total + " complete · " + stat.avg.toFixed(1) + " avg";
+
+  const grid = document.getElementById("set1-topic-grid");
+  grid.innerHTML = "";
+  unit.topics.forEach(function(t){
+    const r = set1RatingFor(unit.key, t.id);
+    const card = document.createElement("div");
+    card.className = "topic-card" + (r >= 9 ? " completed" : "");
+    let options = '<option value="0"'+(r===0?" selected":"")+'>Not rated</option>';
+    for(let i=1; i<=10; i++){ options += '<option value="'+i+'"'+(r===i?" selected":"")+'>'+i+' / 10</option>'; }
+
+    card.innerHTML =
+      '<div class="t-name">'+t.name+'</div>'+
+      '<div class="t-explanation"><strong>Explanation:</strong> '+t.exp+'</div>'+
+      '<div class="t-questions">'+
+        '<div class="t-questions-title">Example Questions</div>'+
+        '<ol>'+
+          '<li><strong>Q1:</strong> '+t.q1+'</li>'+
+          '<li><strong>Q2:</strong> '+t.q2+'</li>'+
+        '</ol>'+
+      '</div>'+
+      '<div class="t-row">'+
+        '<select class="rating-select" data-band="'+bandFor(r)+'">'+options+'</select>'+
+        (r >= 9 ? '<span class="stamp">done</span>' : '') +
+      '</div>';
+
+    const select = card.querySelector("select");
+    select.addEventListener("change", function(){
+      const val = parseInt(select.value, 10);
+      set1SetRating(unit.key, t.id, val);
+      renderSet1Metrics();
+      renderSet1FocusList();
+      renderSet1UnitTable();
+      renderSet1Tabs();
+      renderSet1Topics();
+    });
+    grid.appendChild(card);
+  });
+}
+
+document.getElementById("set1-reset-btn").addEventListener("click", function(){
+  if(confirm("This will reset all rating values for Set 1 Plus Prep. Continue?")){
+    localStorage.removeItem(SET1_RATINGS_KEY);
+    set1Ratings = {};
+    renderSet1Metrics();
+    renderSet1FocusList();
+    renderSet1UnitTable();
+    renderSet1Tabs();
+    renderSet1Topics();
   }
 });
 
