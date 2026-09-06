@@ -319,6 +319,53 @@
   }
 
   :focus-visible{ outline: 2px solid var(--red); outline-offset:2px; }
+
+  /* =========================================================
+     TIMETABLE SCREEN
+     ========================================================= */
+  #timetable-screen{ display:none; }
+  #timetable-screen.active{ display:block; }
+  #timetable-setup-view, #timetable-grid-view{ display:none; }
+  #timetable-setup-view.active, #timetable-grid-view.active{ display:block; }
+
+  .day-config-list{ display:flex; flex-direction:column; gap:10px; }
+  .day-config-card{ background: var(--card); border:1px solid var(--rule); border-radius: var(--radius); padding:14px 16px; }
+  .day-config-head{ display:flex; align-items:center; gap:14px; }
+  .day-config-head .dname{ font-weight:600; font-size:15px; width:110px; flex-shrink:0; }
+  .day-toggle-btn{
+    border:1.5px solid var(--rule); background:transparent; border-radius:20px; padding:6px 16px;
+    font-size:12.5px; font-weight:600; color: var(--ink-faint); transition: all .12s ease;
+  }
+  .day-toggle-btn.on{ border-color: var(--green); background: rgba(63,107,74,0.1); color: var(--green); }
+  .day-windows{ margin-top:12px; display:flex; flex-direction:column; gap:8px; }
+  .window-row{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .window-row input[type="time"]{
+    border:1.5px solid var(--rule); border-radius:3px; padding:6px 8px; font-family: var(--mono); font-size:13px; background: var(--paper);
+  }
+  .window-row .to-label{ font-family: var(--mono); font-size:12px; color: var(--ink-faint); }
+  .window-remove{ border:none; background:transparent; color: var(--red); font-size:16px; font-weight:700; padding:0 6px; }
+  .add-window-btn{ align-self:flex-start; margin-top:2px; }
+
+  .field-row{ display:flex; flex-wrap:wrap; gap:14px; align-items:center; margin-bottom:14px; }
+  .field-row label{ font-size:14px; font-weight:600; margin-right:6px; }
+  .field-row select{ border:1.5px solid var(--rule); border-radius:3px; padding:8px 10px; font-size:13.5px; background: var(--card); color: var(--ink); }
+  .field-row input[type="number"]{ border:1.5px solid var(--rule); border-radius:3px; padding:8px 10px; font-size:13.5px; width:80px; background: var(--card); }
+
+  .tt-table-wrap{ overflow-x:auto; }
+  .tt-table{ width:100%; border-collapse:collapse; min-width:760px; }
+  .tt-table th{
+    font-family: var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color: var(--ink-faint);
+    padding:8px 6px; border-bottom:2px solid var(--ink); text-align:center; font-weight:600;
+  }
+  .tt-table td{ border:1px solid var(--rule); padding:0; height:30px; vertical-align:middle; text-align:center; }
+  .tt-time-cell{ font-family: var(--mono); font-size:11px; color: var(--ink-faint); padding:0 8px !important; white-space:nowrap; border:none !important; }
+  .tt-cell-study{ font-size:11px; font-weight:600; color:#fff; line-height:1.2; padding:2px !important; cursor:default; }
+  .tt-cell-break{ background: repeating-linear-gradient(45deg, var(--paper-deep), var(--paper-deep) 4px, var(--rule) 4px, var(--rule) 8px); font-family:var(--mono); font-size:10px; color: var(--ink-faint); }
+  .tt-cell-life{ background: var(--card); cursor:pointer; font-size:10.5px; color: var(--ink-soft); padding:2px !important; }
+  .tt-cell-life:hover{ background: #FFF8E8; }
+  .tt-cell-life.labelled{ color: var(--ink); font-weight:600; background: #EFE9D6; }
+  .tt-legend{ display:flex; gap:18px; flex-wrap:wrap; margin-bottom:16px; font-size:12px; color: var(--ink-soft); align-items:center; }
+  .tt-legend .swatch-sq{ display:inline-block; width:12px; height:12px; border-radius:2px; margin-right:6px; vertical-align:middle; }
 </style>
 </head>
 <body>
@@ -329,6 +376,7 @@
   <nav class="main-nav">
     <button class="nav-tab active" id="nav-gcse-btn">GCSE Revision Binder</button>
     <button class="nav-tab" id="nav-set1-btn">Set 1 Plus Prep</button>
+    <button class="nav-tab" id="nav-timetable-btn">Study Timetable</button>
   </nav>
 
   <!-- ================= SETUP SCREEN ================= -->
@@ -502,6 +550,116 @@
     </div>
 
     <footer class="note">saved locally in this browser · set 1 plus prep progress tracked independently</footer>
+  </div>
+
+  <!-- ================= STUDY TIMETABLE SECTION ================= -->
+  <div id="timetable-screen">
+
+    <!-- ---- setup view ---- -->
+    <div id="timetable-setup-view">
+      <div class="setup-hero fade-in">
+        <span class="eyebrow-tag">Study Timetable</span>
+        <h1 style="margin-top:14px;">Turn free time into a <em>plan</em>.</h1>
+        <p>Tell us when you're free, and we'll build a weekly study schedule — automatically prioritising whatever you're weakest at, unless you'd rather choose.</p>
+      </div>
+
+      <div class="setup-section fade-in">
+        <div class="setup-section-head">
+          <span class="num">1</span>
+          <h2>When are you free to study?</h2>
+          <span class="hint">add one or more time windows per day</span>
+        </div>
+        <div class="day-config-list" id="tt-day-list"></div>
+      </div>
+
+      <div class="setup-section fade-in">
+        <div class="setup-section-head">
+          <span class="num">2</span>
+          <h2>Focus on something specific first?</h2>
+          <span class="hint"></span>
+        </div>
+        <div class="toggle-pair" id="tt-focus-toggle" style="max-width:360px;">
+          <button type="button" class="toggle-opt" data-value="no">No — use my weakest topics</button>
+          <button type="button" class="toggle-opt" data-value="yes">Yes — let me pick</button>
+        </div>
+        <div class="field-row" id="tt-focus-pickers" style="margin-top:14px; display:none;">
+          <label for="tt-focus-subject">Subject</label>
+          <select id="tt-focus-subject"></select>
+          <label for="tt-focus-topic">Topic</label>
+          <select id="tt-focus-topic"></select>
+        </div>
+      </div>
+
+      <div class="setup-section fade-in">
+        <div class="setup-section-head">
+          <span class="num">3</span>
+          <h2>Subjects per day</h2>
+          <span class="hint"></span>
+        </div>
+        <div class="toggle-pair" id="tt-perday-toggle" style="max-width:360px;">
+          <button type="button" class="toggle-opt" data-value="one">Just one</button>
+          <button type="button" class="toggle-opt" data-value="multiple">Multiple</button>
+        </div>
+        <div class="field-row" id="tt-maxperday-row" style="margin-top:14px; display:none;">
+          <label for="tt-maxperday">Max subjects per day</label>
+          <input type="number" id="tt-maxperday" min="2" max="6" value="2">
+        </div>
+      </div>
+
+      <div class="setup-section fade-in">
+        <div class="setup-section-head">
+          <span class="num">4</span>
+          <h2>Session structure</h2>
+          <span class="hint"></span>
+        </div>
+        <div class="field-row">
+          <label for="tt-session-length">Session length</label>
+          <select id="tt-session-length">
+            <option value="30">30 minutes</option>
+            <option value="60" selected>60 minutes</option>
+            <option value="90">90 minutes</option>
+          </select>
+          <label for="tt-break-length">Break between sessions</label>
+          <select id="tt-break-length">
+            <option value="0" selected>No break</option>
+            <option value="30">30 minutes</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="setup-footer">
+        <button class="stamp-btn" id="tt-generate-btn">Generate my timetable</button>
+        <span class="status" id="tt-setup-status">Pick at least one free day and window to continue.</span>
+      </div>
+    </div>
+
+    <!-- ---- grid / results view ---- -->
+    <div id="timetable-grid-view">
+      <div class="dash-header fade-in">
+        <div>
+          <h1>Your weekly timetable</h1>
+          <div class="sub" id="tt-grid-subline"></div>
+        </div>
+        <div class="dash-actions">
+          <button class="ghost-btn" id="tt-edit-btn">Edit answers</button>
+          <button class="ghost-btn" id="tt-reset-btn">Reset timetable</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="tt-legend">
+          <span><span class="swatch-sq" style="background:var(--ink);"></span>Study session (colour = subject)</span>
+          <span><span class="swatch-sq" style="background:var(--paper-deep);"></span>Break</span>
+          <span><span class="swatch-sq" style="background:var(--card); border:1px solid var(--rule);"></span>Not a study slot — click to name it, or leave blank</span>
+        </div>
+        <div class="tt-table-wrap">
+          <table class="tt-table" id="tt-table"></table>
+        </div>
+      </div>
+
+      <footer class="note">saved locally in this browser · click any blank cell to label what's happening there</footer>
+    </div>
+
   </div>
 
 </div>
@@ -1084,7 +1242,7 @@ const SET1_PREP_UNITS = [
     topics: [
       S1T("u9_t1", "Angles in parallel lines (R)",
         "Alternate, corresponding, and co-interior angles.",
-        "Alternate angles are equal (Z-shape). Corresponding angles are equal (F-shape). Co-interior angles sum to 180° (C-shape).",
+        "Alternate angles are equal (Z-shape). Corresponding angles are equal (F-shape). Co-interior angles sum to 180°.",
         "Parallel lines are cut by a transversal line. If one angle is 65°, find its alternate angle and co-interior angle.",
         "Two interior angles on the same side of a transversal are (2x + 10)° and (3x - 20)°. Find x."
       ),
@@ -1251,23 +1409,35 @@ const SET1_PREP_UNITS = [
 const SETUP_KEY = "gcseBinder_setup_v1";
 const RATINGS_KEY = "gcseBinder_ratings_v1";
 const SET1_RATINGS_KEY = "gcseBinder_set1_ratings_v1";
+const TT_CONFIG_KEY = "gcseBinder_tt_config_v1";
+const TT_SCHEDULE_KEY = "gcseBinder_tt_schedule_v1";
+const TT_LABELS_KEY = "gcseBinder_tt_labels_v1";
 
 let setup = null;     // { mathsType, scienceType, options:[...3], language, religious }
 let ratings = {};      // "subjectKey::topicId" -> 1..10
 let set1Ratings = {};  // "unitKey::topicId" -> 1..10
+let ttConfig = null;   // saved timetable questionnaire answers
+let ttSchedule = null; // generated schedule (per day list of sessions)
+let ttLabels = {};     // "day::HH:MM" -> custom label text for non-study slots
 
 let activeSubjectKey = null;
 let set1ActiveUnitKey = SET1_PREP_UNITS[0].key;
-let activeScreen = "gcse"; // "gcse" or "set1"
+let activeScreen = "gcse"; // "gcse", "set1" or "timetable"
 
 function loadState(){
   try{ setup = JSON.parse(localStorage.getItem(SETUP_KEY)); }catch(e){ setup = null; }
   try{ ratings = JSON.parse(localStorage.getItem(RATINGS_KEY)) || {}; }catch(e){ ratings = {}; }
   try{ set1Ratings = JSON.parse(localStorage.getItem(SET1_RATINGS_KEY)) || {}; }catch(e){ set1Ratings = {}; }
+  try{ ttConfig = JSON.parse(localStorage.getItem(TT_CONFIG_KEY)); }catch(e){ ttConfig = null; }
+  try{ ttSchedule = JSON.parse(localStorage.getItem(TT_SCHEDULE_KEY)); }catch(e){ ttSchedule = null; }
+  try{ ttLabels = JSON.parse(localStorage.getItem(TT_LABELS_KEY)) || {}; }catch(e){ ttLabels = {}; }
 }
 function saveSetup(){ localStorage.setItem(SETUP_KEY, JSON.stringify(setup)); }
 function saveRatings(){ localStorage.setItem(RATINGS_KEY, JSON.stringify(ratings)); }
 function saveSet1Ratings(){ localStorage.setItem(SET1_RATINGS_KEY, JSON.stringify(set1Ratings)); }
+function saveTtConfig(){ localStorage.setItem(TT_CONFIG_KEY, JSON.stringify(ttConfig)); }
+function saveTtSchedule(){ localStorage.setItem(TT_SCHEDULE_KEY, JSON.stringify(ttSchedule)); }
+function saveTtLabels(){ localStorage.setItem(TT_LABELS_KEY, JSON.stringify(ttLabels)); }
 
 /* Build active subjects for GCSE Binder */
 function buildActiveSubjects(cfg){
@@ -1322,28 +1492,35 @@ function bandFor(r){
    ========================================================= */
 const navGcseBtn = document.getElementById("nav-gcse-btn");
 const navSet1Btn = document.getElementById("nav-set1-btn");
+const navTimetableBtn = document.getElementById("nav-timetable-btn");
 
 function switchScreen(target){
   activeScreen = target;
   navGcseBtn.classList.toggle("active", target === "gcse");
   navSet1Btn.classList.toggle("active", target === "set1");
+  navTimetableBtn.classList.toggle("active", target === "timetable");
+
+  document.getElementById("setup-screen").classList.remove("active");
+  document.getElementById("dashboard").classList.remove("active");
+  document.getElementById("set1prep-screen").classList.remove("active");
+  document.getElementById("timetable-screen").classList.remove("active");
 
   if(target === "gcse"){
-    document.getElementById("set1prep-screen").classList.remove("active");
     if(setup && setup.mathsType && setup.scienceType && setup.options && setup.options.length===3 && setup.language && setup.religious){
       openDashboard();
     } else {
       openSetupScreen(setup);
     }
-  } else {
-    document.getElementById("setup-screen").classList.remove("active");
-    document.getElementById("dashboard").classList.remove("active");
+  } else if(target === "set1"){
     openSet1PrepScreen();
+  } else {
+    openTimetableScreen();
   }
 }
 
 navGcseBtn.addEventListener("click", function(){ switchScreen("gcse"); });
 navSet1Btn.addEventListener("click", function(){ switchScreen("set1"); });
+navTimetableBtn.addEventListener("click", function(){ switchScreen("timetable"); });
 
 /* =========================================================
    SETUP SCREEN LOGIC
@@ -1442,6 +1619,7 @@ function validateSetup(){
 function openSetupScreen(prefill){
   document.getElementById("dashboard").classList.remove("active");
   document.getElementById("set1prep-screen").classList.remove("active");
+  document.getElementById("timetable-screen").classList.remove("active");
   document.getElementById("setup-screen").classList.add("active");
   draft.mathsType = prefill ? prefill.mathsType : null;
   draft.scienceType = prefill ? prefill.scienceType : null;
@@ -1493,6 +1671,7 @@ function computeSubjectStats(subj){
 function openDashboard(){
   document.getElementById("setup-screen").classList.remove("active");
   document.getElementById("set1prep-screen").classList.remove("active");
+  document.getElementById("timetable-screen").classList.remove("active");
   document.getElementById("dashboard").classList.add("active");
 
   const subjects = buildActiveSubjects(setup);
@@ -1665,6 +1844,7 @@ function computeSet1UnitStats(unit){
 function openSet1PrepScreen(){
   document.getElementById("setup-screen").classList.remove("active");
   document.getElementById("dashboard").classList.remove("active");
+  document.getElementById("timetable-screen").classList.remove("active");
   document.getElementById("set1prep-screen").classList.add("active");
 
   const totalTopicsCount = SET1_PREP_UNITS.reduce(function(a,u){ return a + u.topics.length; }, 0);
@@ -1824,6 +2004,395 @@ document.getElementById("set1-reset-btn").addEventListener("click", function(){
     renderSet1UnitTable();
     renderSet1Tabs();
     renderSet1Topics();
+  }
+});
+
+/* =========================================================
+   STUDY TIMETABLE LOGIC
+   ========================================================= */
+const TT_DAYS = [
+  {key:"mon", label:"Monday"}, {key:"tue", label:"Tuesday"}, {key:"wed", label:"Wednesday"},
+  {key:"thu", label:"Thursday"}, {key:"fri", label:"Friday"}, {key:"sat", label:"Saturday"}, {key:"sun", label:"Sunday"}
+];
+const TT_GRID_START_MIN = 6*60;   // 06:00
+const TT_GRID_END_MIN   = 23*60;  // 23:00
+const TT_SLOT_MIN = 30;
+
+const ttDraft = {
+  days: {}, // key -> { active:bool, windows:[{start,end}] }
+  focusMode: "no",
+  focusSubjectKey: null,
+  focusTopicId: null,
+  perDayMode: "one",
+  maxPerDay: 2,
+  sessionLength: 60,
+  breakLength: 0
+};
+TT_DAYS.forEach(function(d){ ttDraft.days[d.key] = { active:false, windows:[] }; });
+
+/* combined pool of every subject/unit with topics + ratings, from both binder + set1 */
+function getCombinedSubjectPool(){
+  const pool = [];
+  if(setup && setup.mathsType && setup.scienceType && setup.options && setup.options.length===3 && setup.language && setup.religious){
+    buildActiveSubjects(setup).forEach(function(s){
+      pool.push({
+        source:"gcse", key:s.key, name:s.name, color:s.color,
+        topics: s.topics.map(function(t){ return { id:t.id, name:t.name, rating: ratingFor(s.key,t.id) }; })
+      });
+    });
+  }
+  SET1_PREP_UNITS.forEach(function(u){
+    pool.push({
+      source:"set1", key:u.key, name:u.name, color:u.color,
+      topics: u.topics.map(function(t){ return { id:t.id, name:t.name, rating: set1RatingFor(u.key,t.id) }; })
+    });
+  });
+  return pool;
+}
+
+function timeToMin(hhmm){
+  const parts = hhmm.split(":");
+  return (parseInt(parts[0],10)*60) + parseInt(parts[1],10);
+}
+function minToTime(min){
+  const h = Math.floor(min/60), m = min%60;
+  return (h<10?"0":"")+h+":"+(m<10?"0":"")+m;
+}
+function minToLabel(min){
+  const h24 = Math.floor(min/60), m = min%60;
+  const ampm = h24>=12 ? "PM" : "AM";
+  let h12 = h24 % 12; if(h12===0) h12=12;
+  return h12+(m===0?"":":"+(m<10?"0":"")+m)+ampm;
+}
+
+/* ---------- setup view rendering ---------- */
+function renderTtDayList(){
+  const wrap = document.getElementById("tt-day-list");
+  wrap.innerHTML = "";
+  TT_DAYS.forEach(function(d){
+    const cfg = ttDraft.days[d.key];
+    const card = document.createElement("div");
+    card.className = "day-config-card";
+    let windowsHtml = "";
+    cfg.windows.forEach(function(w, i){
+      windowsHtml +=
+        '<div class="window-row" data-idx="'+i+'">'+
+          '<input type="time" class="win-start" value="'+w.start+'">'+
+          '<span class="to-label">to</span>'+
+          '<input type="time" class="win-end" value="'+w.end+'">'+
+          '<button type="button" class="window-remove" title="Remove">×</button>'+
+        '</div>';
+    });
+    card.innerHTML =
+      '<div class="day-config-head">'+
+        '<span class="dname">'+d.label+'</span>'+
+        '<button type="button" class="day-toggle-btn'+(cfg.active?" on":"")+'">'+(cfg.active ? "Free to study" : "Not studying")+'</button>'+
+      '</div>'+
+      (cfg.active ? '<div class="day-windows">'+windowsHtml+'<button type="button" class="ghost-btn add-window-btn">+ Add another window</button></div>' : '');
+    wrap.appendChild(card);
+
+    card.querySelector(".day-toggle-btn").addEventListener("click", function(){
+      cfg.active = !cfg.active;
+      if(cfg.active && cfg.windows.length===0){ cfg.windows.push({start:"16:00", end:"18:00"}); }
+      renderTtDayList();
+      validateTtSetup();
+    });
+
+    if(cfg.active){
+      card.querySelector(".add-window-btn").addEventListener("click", function(){
+        cfg.windows.push({start:"16:00", end:"18:00"});
+        renderTtDayList();
+        validateTtSetup();
+      });
+      card.querySelectorAll(".window-row").forEach(function(row){
+        const idx = parseInt(row.dataset.idx,10);
+        row.querySelector(".win-start").addEventListener("change", function(e){ cfg.windows[idx].start = e.target.value; validateTtSetup(); });
+        row.querySelector(".win-end").addEventListener("change", function(e){ cfg.windows[idx].end = e.target.value; validateTtSetup(); });
+        row.querySelector(".window-remove").addEventListener("click", function(){
+          cfg.windows.splice(idx,1);
+          renderTtDayList();
+          validateTtSetup();
+        });
+      });
+    }
+  });
+}
+
+function renderTtFocusPickers(){
+  const subjSelect = document.getElementById("tt-focus-subject");
+  const topicSelect = document.getElementById("tt-focus-topic");
+  const pool = getCombinedSubjectPool();
+  subjSelect.innerHTML = pool.map(function(s){ return '<option value="'+s.key+'">'+s.name+'</option>'; }).join("");
+  if(!ttDraft.focusSubjectKey && pool.length){ ttDraft.focusSubjectKey = pool[0].key; }
+  subjSelect.value = ttDraft.focusSubjectKey || "";
+
+  function fillTopics(){
+    const subj = pool.find(function(s){ return s.key === subjSelect.value; });
+    topicSelect.innerHTML = '<option value="">Any topic in this subject</option>' +
+      (subj ? subj.topics.map(function(t){ return '<option value="'+t.id+'">'+t.name+'</option>'; }).join("") : "");
+    topicSelect.value = ttDraft.focusTopicId || "";
+  }
+  fillTopics();
+
+  subjSelect.onchange = function(){ ttDraft.focusSubjectKey = subjSelect.value; ttDraft.focusTopicId = null; fillTopics(); };
+  topicSelect.onchange = function(){ ttDraft.focusTopicId = topicSelect.value || null; };
+}
+
+function validateTtSetup(){
+  const hasWindow = TT_DAYS.some(function(d){
+    const cfg = ttDraft.days[d.key];
+    return cfg.active && cfg.windows.some(function(w){ return w.start && w.end && timeToMin(w.end) > timeToMin(w.start); });
+  });
+  document.getElementById("tt-generate-btn").disabled = !hasWindow;
+  document.getElementById("tt-setup-status").textContent = hasWindow
+    ? "Ready — click generate whenever you like."
+    : "Pick at least one free day and a valid time window to continue.";
+}
+
+document.getElementById("tt-focus-toggle").querySelectorAll(".toggle-opt").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    ttDraft.focusMode = btn.dataset.value;
+    document.getElementById("tt-focus-toggle").querySelectorAll(".toggle-opt").forEach(function(b){ b.classList.toggle("selected", b===btn); });
+    document.getElementById("tt-focus-pickers").style.display = (ttDraft.focusMode === "yes") ? "flex" : "none";
+    if(ttDraft.focusMode === "yes"){ renderTtFocusPickers(); }
+  });
+});
+document.getElementById("tt-perday-toggle").querySelectorAll(".toggle-opt").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    ttDraft.perDayMode = btn.dataset.value;
+    document.getElementById("tt-perday-toggle").querySelectorAll(".toggle-opt").forEach(function(b){ b.classList.toggle("selected", b===btn); });
+    document.getElementById("tt-maxperday-row").style.display = (ttDraft.perDayMode === "multiple") ? "flex" : "none";
+  });
+});
+document.getElementById("tt-maxperday").addEventListener("change", function(e){ ttDraft.maxPerDay = Math.max(2, parseInt(e.target.value,10) || 2); });
+document.getElementById("tt-session-length").addEventListener("change", function(e){ ttDraft.sessionLength = parseInt(e.target.value,10); });
+document.getElementById("tt-break-length").addEventListener("change", function(e){ ttDraft.breakLength = parseInt(e.target.value,10); });
+
+function openTimetableSetupView(prefillCfg){
+  document.getElementById("timetable-grid-view").classList.remove("active");
+  document.getElementById("timetable-setup-view").classList.add("active");
+
+  if(prefillCfg){
+    TT_DAYS.forEach(function(d){
+      ttDraft.days[d.key] = { active: !!prefillCfg.days[d.key].active, windows: (prefillCfg.days[d.key].windows||[]).map(function(w){return {start:w.start,end:w.end};}) };
+    });
+    ttDraft.focusMode = prefillCfg.focusMode;
+    ttDraft.focusSubjectKey = prefillCfg.focusSubjectKey;
+    ttDraft.focusTopicId = prefillCfg.focusTopicId;
+    ttDraft.perDayMode = prefillCfg.perDayMode;
+    ttDraft.maxPerDay = prefillCfg.maxPerDay;
+    ttDraft.sessionLength = prefillCfg.sessionLength;
+    ttDraft.breakLength = prefillCfg.breakLength;
+  }
+
+  document.getElementById("tt-focus-toggle").querySelectorAll(".toggle-opt").forEach(function(b){ b.classList.toggle("selected", b.dataset.value===ttDraft.focusMode); });
+  document.getElementById("tt-focus-pickers").style.display = (ttDraft.focusMode === "yes") ? "flex" : "none";
+  document.getElementById("tt-perday-toggle").querySelectorAll(".toggle-opt").forEach(function(b){ b.classList.toggle("selected", b.dataset.value===ttDraft.perDayMode); });
+  document.getElementById("tt-maxperday-row").style.display = (ttDraft.perDayMode === "multiple") ? "flex" : "none";
+  document.getElementById("tt-maxperday").value = ttDraft.maxPerDay;
+  document.getElementById("tt-session-length").value = String(ttDraft.sessionLength);
+  document.getElementById("tt-break-length").value = String(ttDraft.breakLength);
+
+  renderTtDayList();
+  renderTtFocusPickers();
+  validateTtSetup();
+  window.scrollTo(0,0);
+}
+
+/* ---------- schedule generation ---------- */
+function buildStudyQueue(){
+  const pool = getCombinedSubjectPool();
+  // flatten to topic entries
+  let entries = [];
+  pool.forEach(function(s){
+    s.topics.forEach(function(t){
+      entries.push({ subjectKey:s.key, subjectName:s.name, color:s.color, topicId:t.id, topicName:t.name, rating:t.rating });
+    });
+  });
+
+  if(ttDraft.focusMode === "yes" && ttDraft.focusSubjectKey){
+    const chosenSubj = pool.find(function(s){ return s.key === ttDraft.focusSubjectKey; });
+    let focusEntries = [];
+    if(chosenSubj){
+      let topics = chosenSubj.topics.slice();
+      if(ttDraft.focusTopicId){ topics = topics.filter(function(t){ return t.id === ttDraft.focusTopicId; }); }
+      topics.sort(function(a,b){ return a.rating - b.rating; });
+      focusEntries = topics.map(function(t){ return { subjectKey:chosenSubj.key, subjectName:chosenSubj.name, color:chosenSubj.color, topicId:t.id, topicName:t.name, rating:t.rating }; });
+    }
+    const rest = entries.filter(function(e){ return e.subjectKey !== ttDraft.focusSubjectKey; }).sort(function(a,b){ return a.rating - b.rating; });
+    entries = focusEntries.concat(rest);
+  } else {
+    entries.sort(function(a,b){ return a.rating - b.rating; });
+  }
+  return entries;
+}
+
+function generateTimetable(){
+  const queue = buildStudyQueue();
+  if(queue.length === 0){ return { days:{} }; }
+
+  // unique subject order (order of first appearance in queue)
+  const subjectOrder = [];
+  queue.forEach(function(e){ if(subjectOrder.indexOf(e.subjectKey) === -1) subjectOrder.push(e.subjectKey); });
+  const topicsBySubject = {};
+  subjectOrder.forEach(function(sk){ topicsBySubject[sk] = queue.filter(function(e){ return e.subjectKey === sk; }); });
+
+  let subjectPointer = 0;
+  let queuePointer = 0;
+  const schedule = { days:{} };
+
+  TT_DAYS.forEach(function(d){
+    const cfg = ttDraft.days[d.key];
+    schedule.days[d.key] = { sessions:[] };
+    if(!cfg.active || cfg.windows.length===0) return;
+
+    let daySessionSlots = []; // {start,end} minutes
+    cfg.windows.forEach(function(w){
+      const startMin = timeToMin(w.start), endMin = timeToMin(w.end);
+      if(endMin <= startMin) return;
+      let cursor = startMin;
+      while(cursor + ttDraft.sessionLength <= endMin){
+        daySessionSlots.push({ start:cursor, end:cursor+ttDraft.sessionLength });
+        cursor += ttDraft.sessionLength + ttDraft.breakLength;
+      }
+    });
+    if(daySessionSlots.length === 0) return;
+
+    if(ttDraft.perDayMode === "one"){
+      const sk = subjectOrder[subjectPointer % subjectOrder.length];
+      subjectPointer++;
+      const topics = topicsBySubject[sk];
+      daySessionSlots.forEach(function(slot, i){
+        const t = topics[i % topics.length];
+        schedule.days[d.key].sessions.push({ start:slot.start, end:slot.end, subjectKey:t.subjectKey, subjectName:t.subjectName, color:t.color, topicName:t.topicName });
+      });
+    } else {
+      // multiple subjects per day, capped at maxPerDay distinct subjects
+      const daySubjects = [];
+      for(let i=0;i<ttDraft.maxPerDay && i<subjectOrder.length;i++){
+        daySubjects.push(subjectOrder[(subjectPointer+i) % subjectOrder.length]);
+      }
+      subjectPointer += Math.min(ttDraft.maxPerDay, subjectOrder.length);
+      const dayQueue = [];
+      daySubjects.forEach(function(sk){ dayQueue.push.apply(dayQueue, topicsBySubject[sk]); });
+      daySessionSlots.forEach(function(slot, i){
+        const t = dayQueue[i % dayQueue.length];
+        schedule.days[d.key].sessions.push({ start:slot.start, end:slot.end, subjectKey:t.subjectKey, subjectName:t.subjectName, color:t.color, topicName:t.topicName });
+      });
+    }
+  });
+
+  return schedule;
+}
+
+document.getElementById("tt-generate-btn").addEventListener("click", function(){
+  ttConfig = {
+    days: JSON.parse(JSON.stringify(ttDraft.days)),
+    focusMode: ttDraft.focusMode,
+    focusSubjectKey: ttDraft.focusSubjectKey,
+    focusTopicId: ttDraft.focusTopicId,
+    perDayMode: ttDraft.perDayMode,
+    maxPerDay: ttDraft.maxPerDay,
+    sessionLength: ttDraft.sessionLength,
+    breakLength: ttDraft.breakLength
+  };
+  saveTtConfig();
+  ttSchedule = generateTimetable();
+  saveTtSchedule();
+  openTimetableGridView();
+});
+
+/* ---------- grid view rendering ---------- */
+function openTimetableGridView(){
+  document.getElementById("timetable-setup-view").classList.remove("active");
+  document.getElementById("timetable-grid-view").classList.add("active");
+
+  const activeDays = TT_DAYS.filter(function(d){ return ttConfig.days[d.key].active; });
+  document.getElementById("tt-grid-subline").textContent =
+    activeDays.length + " study day"+(activeDays.length===1?"":"s")+" a week · "+ttConfig.sessionLength+" min sessions"+
+    (ttConfig.breakLength ? " · "+ttConfig.breakLength+" min breaks" : "");
+
+  renderTtTable();
+  window.scrollTo(0,0);
+}
+
+function sessionAt(dayKey, slotStartMin){
+  const sessions = (ttSchedule.days[dayKey] && ttSchedule.days[dayKey].sessions) || [];
+  return sessions.find(function(s){ return slotStartMin >= s.start && slotStartMin < s.end; });
+}
+function isWithinAnyWindow(dayKey, slotStartMin){
+  const cfg = ttConfig.days[dayKey];
+  if(!cfg || !cfg.active) return false;
+  return cfg.windows.some(function(w){ return slotStartMin >= timeToMin(w.start) && slotStartMin < timeToMin(w.end); });
+}
+
+function renderTtTable(){
+  const table = document.getElementById("tt-table");
+  let html = "<thead><tr><th>Time</th>";
+  TT_DAYS.forEach(function(d){ html += "<th>"+d.label.slice(0,3)+"</th>"; });
+  html += "</tr></thead><tbody>";
+
+  for(let min = TT_GRID_START_MIN; min < TT_GRID_END_MIN; min += TT_SLOT_MIN){
+    html += "<tr>";
+    html += '<td class="tt-time-cell">'+minToLabel(min)+'</td>';
+    TT_DAYS.forEach(function(d){
+      const inWindow = isWithinAnyWindow(d.key, min);
+      if(inWindow){
+        const sess = sessionAt(d.key, min);
+        if(sess){
+          html += '<td class="tt-cell-study" style="background:'+sess.color+';" title="'+sess.subjectName+' — '+sess.topicName+'">'+sess.subjectName+'<br>'+sess.topicName+'</td>';
+        } else {
+          html += '<td class="tt-cell-break">break</td>';
+        }
+      } else {
+        const labelKey = d.key+"::"+minToTime(min);
+        const label = ttLabels[labelKey];
+        html += '<td class="tt-cell-life'+(label?" labelled":"")+'" data-daykey="'+d.key+'" data-time="'+minToTime(min)+'">'+(label ? label : "")+'</td>';
+      }
+    });
+    html += "</tr>";
+  }
+  html += "</tbody>";
+  table.innerHTML = html;
+
+  table.querySelectorAll(".tt-cell-life").forEach(function(cell){
+    cell.addEventListener("click", function(){
+      const key = cell.dataset.daykey+"::"+cell.dataset.time;
+      const current = ttLabels[key] || "";
+      const val = window.prompt("Label this time slot (leave blank to clear it):", current);
+      if(val === null) return;
+      if(val.trim() === ""){ delete ttLabels[key]; }
+      else { ttLabels[key] = val.trim(); }
+      saveTtLabels();
+      renderTtTable();
+    });
+  });
+}
+
+function openTimetableScreen(){
+  document.getElementById("setup-screen").classList.remove("active");
+  document.getElementById("dashboard").classList.remove("active");
+  document.getElementById("set1prep-screen").classList.remove("active");
+  document.getElementById("timetable-screen").classList.add("active");
+
+  if(ttConfig && ttSchedule){
+    openTimetableGridView();
+  } else {
+    openTimetableSetupView(ttConfig);
+  }
+}
+
+document.getElementById("tt-edit-btn").addEventListener("click", function(){ openTimetableSetupView(ttConfig); });
+document.getElementById("tt-reset-btn").addEventListener("click", function(){
+  if(confirm("This clears your timetable answers, generated schedule, and any labels you've added. Continue?")){
+    localStorage.removeItem(TT_CONFIG_KEY);
+    localStorage.removeItem(TT_SCHEDULE_KEY);
+    localStorage.removeItem(TT_LABELS_KEY);
+    ttConfig = null; ttSchedule = null; ttLabels = {};
+    TT_DAYS.forEach(function(d){ ttDraft.days[d.key] = { active:false, windows:[] }; });
+    ttDraft.focusMode = "no"; ttDraft.focusSubjectKey = null; ttDraft.focusTopicId = null;
+    ttDraft.perDayMode = "one"; ttDraft.maxPerDay = 2; ttDraft.sessionLength = 60; ttDraft.breakLength = 0;
+    openTimetableSetupView(null);
   }
 });
 
